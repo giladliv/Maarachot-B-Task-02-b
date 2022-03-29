@@ -169,6 +169,20 @@ void Notebook::erase(int page, int row, int col, Direction direction, int len)
 {
     isGoodIndex(page, row, col);
     isGoodLen(col, len, direction);
+
+    if (_notebook.find(page) == _notebook.end())
+    {
+        _notebook[page] = unordered_map<int,string>();
+    }
+    if (direction == Direction::Horizontal)
+    {
+        _notebook[page] = unordered_map<int,string>();
+    }
+    else
+    {
+
+    }
+    
 }
 
 void Notebook::show(int page)

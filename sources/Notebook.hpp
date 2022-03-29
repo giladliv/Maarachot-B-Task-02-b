@@ -16,12 +16,6 @@ namespace ariel
 {
     class Notebook
     {
-        private:
-            bool isGoodIndex(int page, int row, int col);
-            bool isGoodLen(int col, int len, Direction direction);
-            bool isGoodString(string str);
-
-            unordered_map<int, unordered_map<int,string>> _notebook;
         public:
             Notebook();
             void write(int page, int row, int col, Direction direction, const string& str);
@@ -29,6 +23,13 @@ namespace ariel
             void erase(int page, int row, int col, Direction direction, int len);
             void show(int page);
             ~Notebook();
+        
+        private:
+            bool isGoodIndex(int page, int row, int col);
+            bool isGoodLen(int col, int len, Direction direction);
+            bool isGoodString(string str);
+            void writeAfterChecks(int page, int row, int col, Direction direction, string str = "", bool isErase = false);
+            unordered_map<int, unordered_map<int,string>> _notebook;
 
     
     };
