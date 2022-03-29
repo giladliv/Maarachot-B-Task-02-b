@@ -28,6 +28,7 @@ namespace ariel
             bool isGoodIndex(int page, int row, int col);
             bool isGoodLen(int col, int len, Direction direction);
             bool isGoodString(string str);
+            bool checkIfCanWrite(int page, int row, int col, Direction direction, int len);
             void writeAfterChecks(int page, int row, int col, Direction direction, string str = "", bool isErase = false);
             unordered_map<int, unordered_map<int,string>> _notebook;
 

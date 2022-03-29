@@ -189,3 +189,32 @@ void Notebook::show(int page)
 {
     isGoodIndex(page, 0, 0);
 }
+
+void Notebook::writeAfterChecks(int page, int row, int col, Direction direction, string str = "", bool isErase = false)
+{
+    if (isErase || checkIfCanWrite(page, row, col, direction, str.length()))
+    {
+        
+    }
+    else if (!isErase) // if the cause of the failier is not the erase flag
+    {
+        throw MessageException("string cannot be written over written or erased places");
+    }
+}
+
+bool Notebook::checkIfCanWrite(int page, int row, int col, Direction direction, int len)
+{
+    // if the place i
+    if (_notebook.find(page) == _notebook.end())
+    {
+        return true;
+    }
+
+    if (direction == Direction::Horizontal)
+    {
+        if (_notebook[page].find(row) == _notebook[page].end())
+        {
+            return true
+        }
+    }
+}
