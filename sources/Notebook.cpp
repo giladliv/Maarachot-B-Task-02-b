@@ -124,6 +124,35 @@ string Notebook::read(int page, int row, int col, Direction direction, int len)
     isGoodLen(col, len, direction);
     // if reached here no exception was thrown - YAY!
 
+    // if the page doesn't exist then return blank line with the wanted space
+    if (_notebook.find(page) == _notebook.end() || 
+            _notebook[page].find(row) == _notebook[page].end())
+    {
+        return (string(len, '_'));
+    }
+    if (direction == Direction::Horizontal)
+    {
+        // if the row doesn't exist, return the string: '_' * len
+        if (_notebook.find(page) == _notebook.end() || 
+            _notebook[page].find(row) == _notebook[page].end())
+        {
+            return (string(len, '_'));
+        }
+        
+        // return the substring from the col
+        return (_notebook[page][row].substr(col, len));
+    }
+    else
+    {
+        string read_str;
+        for (unsigned int i = row; i < row + len; i++)
+        {
+            // if the row doesn't not exist, return '_' else the char
+            read_str += (_notebook[page].find(i) != _notebook[page].end()) ? _notebook[page][i][col] : '_'; 
+        }
+        return (read_str);
+    }
+
     return "";
 }
 
