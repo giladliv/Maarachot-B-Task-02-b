@@ -196,7 +196,8 @@ void Notebook::show(int page)
         key = *(it);
         if (i != 0 && prev + 1 < key)
         {
-            cout << "\n.\n.\n." << endl;
+            cout << "\n" << endl;
+            cout << string(50, ' ') << "⋮\n" << endl;
         }
         prev = key;
         cout << _notebook[page][key] << "\t" << "(" << key << ")" << endl;
