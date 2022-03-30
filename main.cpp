@@ -6,13 +6,14 @@
  * Since : 2022-01
  */
 
-#include "sources/Notebook.hpp"
-#include "sources/Direction.hpp"
-using ariel::Direction;
+#include "sources/MenuProg.hpp"
+using ariel::MenuProg;
 
 #include <iostream>
 #include <stdexcept>
 using namespace std;
+
+const string getChoice(string msg = "");
 
 int main() {
 	ariel::Notebook notebook;
@@ -32,6 +33,13 @@ int main() {
 			//    100: __a~cd___
 			//    101: ___~_____
 			//    102: _________
+		MenuProg nbProgram;
+		// Direction d = nbProgram.getInputDirection();
+		// if (d == Direction::Horizontal)
+		// 	cout << "hor" << endl;
+		// else if (d == Direction::Vertical)
+		// 	cout << "ver" << endl;
+		
 	}catch (const std::exception& e)
 	{
 		cout << e.what() << endl;

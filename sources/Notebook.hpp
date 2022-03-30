@@ -31,7 +31,9 @@ namespace ariel
             static bool isGoodString(string str);
             bool checkIfCanWrite(int page, int row, int col, Direction direction, int len);
             void writeAfterChecks(int page, int row, int col, Direction direction, string str = "", bool isErase = false);
+            void manageOptins(int choice);
             unordered_map<int, unordered_map<int,string>> _notebook;
+            string _skipLine;
 
     
     };

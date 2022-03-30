@@ -2,9 +2,10 @@
 
 using ariel::Notebook;
 
-Notebook::Notebook(/* args */)
+Notebook::Notebook()
 {
     _notebook.clear();
+    _skipLine = string(LINE_MAX / 2, ' ') + "⋮";    // line for continuity in show mode
 }
 
 Notebook::~Notebook()
@@ -191,13 +192,16 @@ void Notebook::show(int page)
     int key = 0;
     int prev = 0;
     int i = 0;
+    // run on the each key and get the line of it from the notebook
     for (auto it = keys.begin(); it != keys.end(); ++it, i++)
     {
         key = *(it);
+        // if the previous line is not the next int counting (+1) fron te previous, and not the first
+        // then print that there is skip (by 3 vertical dots)
         if (i != 0 && prev + 1 < key)
         {
             cout << "\n" << endl;
-            cout << string(50, ' ') << "⋮\n" << endl;
+            cout << _skipLine  << endl << endl;
         }
         prev = key;
         cout << _notebook[page][key] << "\t" << "(" << key << ")" << endl;
