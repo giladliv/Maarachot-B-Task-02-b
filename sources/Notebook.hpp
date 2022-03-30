@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include <unordered_map>
 #include <cctype>
+#include <set>
 #include "Direction.hpp"
 
 using ariel::Direction;

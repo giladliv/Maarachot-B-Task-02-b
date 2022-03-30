@@ -126,16 +126,14 @@ string Notebook::read(int page, int row, int col, Direction direction, int len)
     // if reached here no exception was thrown - YAY!
 
     // if the page doesn't exist then return blank line with the wanted space
-    if (_notebook.find(page) == _notebook.end() || 
-            _notebook[page].find(row) == _notebook[page].end())
+    if (_notebook.find(page) == _notebook.end())
     {
         return (string((unsigned int)len, '_'));
     }
     if (direction == Direction::Horizontal)
     {
         // if the row doesn't exist, return the string: '_' * len
-        if (_notebook.find(page) == _notebook.end() || 
-            _notebook[page].find(row) == _notebook[page].end())
+        if (_notebook[page].find(row) == _notebook[page].end())
         {
             return (string((unsigned int)len, '_'));
         }
@@ -181,9 +179,27 @@ void Notebook::show(int page)
         cout << "The page is empty" << endl;
         return;
     }
+
+    // a (sorted) set that contains the lines by the order
+    set<int> keys;
     for (auto it = _notebook[page].begin(); it != _notebook[page].end(); ++it)
     {
-        cout << it->second << "\t" << "(" << it->first << ")" << endl;
+        keys.insert(it->first);
+        //cout << it->second << "\t" << "(" << it->first << ")" << endl;
+    }
+
+    int key = 0;
+    int prev = 0;
+    int i = 0;
+    for (auto it = keys.begin(); it != keys.end(); ++it, i++)
+    {
+        key = *(it);
+        if (i != 0 && prev + 1 < key)
+        {
+            cout << "\n.\n.\n." << endl;
+        }
+        prev = key;
+        cout << _notebook[page][key] << "\t" << "(" << key << ")" << endl;
     }
     
     
