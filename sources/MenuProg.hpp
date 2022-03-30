@@ -8,6 +8,12 @@ using ariel::Direction;
 #include <stdexcept>
 using namespace std;
 
+#define READ 1
+#define WRITE 2
+#define ERASE 3
+#define SHOW 4
+#define CLEAR_SCREN 5
+#define EXIT 6
 
 namespace ariel
 {
@@ -18,7 +24,7 @@ namespace ariel
             void run();
             static string getChoice(const string& msg = "");
             static int getNumber(const string& msg = "");
-            static Direction getInputDirection();
+            
             ~MenuProg();
 
         private:
@@ -26,22 +32,12 @@ namespace ariel
             static int getInputPageNum();
             static int getInputRowNum();
             static int getInputColNum();
-            
+            static Direction getInputDirection();
+            bool manageOptins(int choice);
             //static int getInputLenNum(); //return getNumber("please enter here the length number for: ");
             
             
     };
-
-    // enum
-    enum {
-		READ = 1,
-		WRITE,
-        ERASE,
-        SHOW,
-        CLEAR_SCREN,
-        EXIT
-
-	};
 }
 
 

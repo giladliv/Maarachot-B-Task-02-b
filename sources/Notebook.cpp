@@ -174,7 +174,7 @@ void Notebook::erase(int page, int row, int col, Direction direction, int len)
 void Notebook::show(int page)
 {
     isGoodIndex(page, 0, 0);
-
+    cout << "\nNow presenting the page " << page << ":" << endl <<endl;
     if (_notebook.find(page) == _notebook.end())
     {
         cout << "The page is empty" << endl;
@@ -206,7 +206,7 @@ void Notebook::show(int page)
         prev = key;
         cout << _notebook[page][key] << "\t" << "(" << key << ")" << endl;
     }
-    
+    cout << endl <<endl;
     
 }
 

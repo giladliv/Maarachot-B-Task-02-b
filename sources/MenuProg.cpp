@@ -39,7 +39,8 @@ int MenuProg::getNumber(const string& msg)
         try
         {
             str = getChoice(msg);
-            retNum = stoi(msg);
+            retNum = atoi(msg.c_str());
+            cout << retNum << endl;
             break;
         }
         catch(const std::exception& e)
@@ -98,15 +99,13 @@ Direction MenuProg::getInputDirection()
             dir = Direction::Horizontal;
             break;
         }
-        else if (strDir.length() == 1 && tolower(strDir[0]) == 'v')
+        if (strDir.length() == 1 && tolower(strDir[0]) == 'v') // if the input is "V" or 'v' then its vertical
         {
             dir = Direction::Vertical;
             break;
         }
-        else
-        {
-            cout << "invalid input has been enterd, please follow the intructions" << endl;
-        }
+        // not "h" nor "v"
+        cout << "invalid input has been enterd, please follow the intructions" << endl;
         
     } while (true);
 
@@ -114,9 +113,80 @@ Direction MenuProg::getInputDirection()
     
 }
 
-void manageOptins(int choice)
+/**
+ * @brief by given choice number act accordingly to the option 
+ * 
+ * @param choice - the users choice
+ * @return true - the user enter exit
+ * @return false 
+ */
+bool MenuProg::manageOptins(int choice)
 {
+    try
+    {
+        if (choice == READ)
+        {
+            cout << "for reading from the notebook, we need some data from you" << endl;
+            int page = getInputPageNum();
+            int row = getInputRowNum();
+            int col = getInputColNum();
+            Direction dir = getInputDirection();
+            int len = getNumber("please here how many charaters you want to read: ");
 
+            cout << "From notebook:" << endl;
+            cout << _notebook.read(page, row, col, dir, len) << endl << endl;
+        }
+        else if (choice == WRITE)
+        {
+            cout << "for writting from the notebook, we need some data from you" << endl;
+            int page = getInputPageNum();
+            int row = getInputRowNum();
+            int col = getInputColNum();
+            Direction dir = getInputDirection();
+            string line = MenuProg::getChoice("please here your line: ");
+
+            _notebook.write(page, row, col, dir, line);
+            cout << "your string has been added successfuly" << endl << endl;
+        }
+        else if (choice == ERASE)
+        {
+            cout << "for erasing from the notebook, we need some data from you" << endl;
+            int page = getInputPageNum();
+            int row = getInputRowNum();
+            int col = getInputColNum();
+            Direction dir = getInputDirection();
+            int len = getNumber("please here how many charaters you want to erase: ");
+
+            _notebook.erase(page, row, col, dir, len);
+            cout << "your erasing has been done successfuly" << endl << endl;
+        }
+        else if (choice == SHOW)
+        {
+            cout << "***show option***" << endl;
+            int page = getInputPageNum();
+            _notebook.show(page);
+        }
+        else if (choice == CLEAR_SCREN)
+        {
+            system("clear");
+        }
+        else if (choice == WRITE)
+        {
+            cout << "Goodbye!!" << endl << endl;
+            return (true);      // return that the program is done
+        }
+        else
+        {
+            cout << "invalid choice - please try again" << endl << endl;
+        }
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << endl << "cannot manage to perform your action because:" << endl;
+        std::cerr << e.what() << endl << endl;
+    }
+    return (false);
+    
 }
 
 /**
@@ -127,6 +197,7 @@ void MenuProg::run()
 {
     cout << "welcome to Gilad's Notebook Program!!" << endl << endl;
     int choice = 0;
+    bool toStop = false;
     do
     {
         cout << "what can we offer to you?" << endl;
@@ -138,16 +209,8 @@ void MenuProg::run()
         cout << "6. exit from the program" << endl;
 
         choice = getNumber("please enter here your choice: ");
+        toStop = manageOptins(choice);
 
-        switch (choice)
-        {
-        case READ:
-            break;
-        
-        default:
-            break;
-        }
-
-    } while (true);
+    } while (!toStop);
     
 }
