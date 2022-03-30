@@ -25,9 +25,9 @@ namespace ariel
             ~Notebook();
         
         private:
-            bool isGoodIndex(int page, int row, int col);
-            bool isGoodLen(int col, int len, Direction direction);
-            bool isGoodString(string str);
+            static bool isGoodIndex(int page, int row, int col);
+            static bool isGoodLen(int col, int len, Direction direction);
+            static bool isGoodString(string str);
             bool checkIfCanWrite(int page, int row, int col, Direction direction, int len);
             void writeAfterChecks(int page, int row, int col, Direction direction, string str = "", bool isErase = false);
             unordered_map<int, unordered_map<int,string>> _notebook;

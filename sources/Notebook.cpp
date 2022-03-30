@@ -105,7 +105,8 @@ void Notebook::write(int page, int row, int col, Direction direction, const stri
     isGoodString(str);                          // check if the string is ok
     
     // if reached here no exception was thrown - YAY!
-    
+
+    writeAfterChecks(page, row, col, direction, str);
 }
 
 /**
@@ -128,7 +129,7 @@ string Notebook::read(int page, int row, int col, Direction direction, int len)
     if (_notebook.find(page) == _notebook.end() || 
             _notebook[page].find(row) == _notebook[page].end())
     {
-        return (string(len, '_'));
+        return (string((unsigned int)len, '_'));
     }
     if (direction == Direction::Horizontal)
     {
@@ -136,24 +137,21 @@ string Notebook::read(int page, int row, int col, Direction direction, int len)
         if (_notebook.find(page) == _notebook.end() || 
             _notebook[page].find(row) == _notebook[page].end())
         {
-            return (string(len, '_'));
+            return (string((unsigned int)len, '_'));
         }
         
         // return the substring from the col
-        return (_notebook[page][row].substr(col, len));
+        return (_notebook[page][row].substr((unsigned int)col, (unsigned int)len));
     }
-    else
+    
+    // else if ver
+    string read_str;
+    for (int i = row; i < row + len; i++)
     {
-        string read_str;
-        for (unsigned int i = row; i < row + len; i++)
-        {
-            // if the row doesn't not exist, return '_' else the char
-            read_str += (_notebook[page].find(i) != _notebook[page].end()) ? _notebook[page][i][col] : '_'; 
-        }
-        return (read_str);
+        // if the row doesn't not exist, return '_' else the char
+        read_str += (_notebook[page].find(i) != _notebook[page].end()) ? _notebook[page][i][(unsigned int)col] : '_'; 
     }
-
-    return "";
+    return (read_str);
 }
 
 /**
@@ -170,31 +168,64 @@ void Notebook::erase(int page, int row, int col, Direction direction, int len)
     isGoodIndex(page, row, col);
     isGoodLen(col, len, direction);
 
-    if (_notebook.find(page) == _notebook.end())
-    {
-        _notebook[page] = unordered_map<int,string>();
-    }
-    if (direction == Direction::Horizontal)
-    {
-        _notebook[page] = unordered_map<int,string>();
-    }
-    else
-    {
-
-    }
+    writeAfterChecks(page, row, col, direction, string((unsigned int)len, '~'), true);
     
 }
 
 void Notebook::show(int page)
 {
     isGoodIndex(page, 0, 0);
+
+    if (_notebook.find(page) == _notebook.end())
+    {
+        cout << "The page is empty" << endl;
+        return;
+    }
+    for (auto it = _notebook[page].begin(); it != _notebook[page].end(); ++it)
+    {
+        cout << it->second << "\t" << "(" << it->first << ")" << endl;
+    }
+    
+    
 }
 
-void Notebook::writeAfterChecks(int page, int row, int col, Direction direction, string str = "", bool isErase = false)
+void Notebook::writeAfterChecks(int page, int row, int col, Direction direction, string str, bool isErase)
 {
-    if (isErase || checkIfCanWrite(page, row, col, direction, str.length()))
+    int len = str.length();
+    if (isErase || checkIfCanWrite(page, row, col, direction, len))
     {
-        
+        if (_notebook.find(page) == _notebook.end())
+        {
+            _notebook[page] = unordered_map<int,string>();
+        }
+
+        if (direction == Direction::Horizontal)
+        {
+            // create a row if doesn't exist
+            if (_notebook[page].find(row) == _notebook[page].end())
+            {
+                _notebook[page][row] = string(LINE_MAX, '_');
+            }
+
+            // replace the string with the given str
+            _notebook[page][row].replace((unsigned int)col, (unsigned int)len, str);
+
+        }
+        else
+        {
+            for (int i = 0; i < len; i++)
+            {
+                // if the row is not defined then create it the check
+                if (_notebook[page].find(i + row) == _notebook[page].end())
+                {
+                    _notebook[page][i + row] = string(LINE_MAX, '_');
+                }
+                
+                // set the index
+                _notebook[page][i + row][(unsigned int)col] = str[(unsigned int)i];
+            }
+        }
+
     }
     else if (!isErase) // if the cause of the failier is not the erase flag
     {
@@ -204,7 +235,7 @@ void Notebook::writeAfterChecks(int page, int row, int col, Direction direction,
 
 bool Notebook::checkIfCanWrite(int page, int row, int col, Direction direction, int len)
 {
-    // if the place i
+    // if the page doesn't exist then it can be overrided
     if (_notebook.find(page) == _notebook.end())
     {
         return true;
@@ -212,9 +243,39 @@ bool Notebook::checkIfCanWrite(int page, int row, int col, Direction direction, 
 
     if (direction == Direction::Horizontal)
     {
+        // if the row doesn't exist then it can be overrided
         if (_notebook[page].find(row) == _notebook[page].end())
         {
-            return true
+            return true;
+        }
+        
+        char ch = 0;
+        for (unsigned int c = (unsigned int)col; c < len + col; c++)
+        {
+            ch = _notebook[page][row][c];
+            if (ch != '_') // if the char is not empty then it is a problem
+            {
+                return false;
+            }
+        }
+        
+    }
+    else
+    {
+        for (int r = row; r < row + len; r++)
+        {
+            // if the row is not defined then pass the check
+            if (_notebook[page].find(r) == _notebook[page].end())
+            {
+                continue;
+            }
+            
+            // if the char is no empty then it is not legal
+            if (_notebook[page][r][(unsigned int)col] != '_')
+            {
+                return false;
+            }
         }
     }
+    return true; // if something didn't fool you, the path is clear to writting
 }
